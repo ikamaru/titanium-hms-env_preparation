@@ -1,4 +1,4 @@
-# HUAWEI Push Kit - Titanium Module
+# HMS Environment Preparation - Titanium Plugin
 
 A Titanium Plugin to prepare the [HMS environment ](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html) in your Titanium project.
 
