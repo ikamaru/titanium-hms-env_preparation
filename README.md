@@ -2,7 +2,7 @@
 
 A Titanium Plugin to prepare the [HMS environment ](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html) in your Titanium project.
 
-This plugin is required start using some HMS services such us [titanium-hms-push-kit](https://github.com/ikamaru/titanium-hms-push-kit) and [titanium-hms-map-kit](https://github.com/ikamaru/titanium-hms-map-kit)
+This plugin is required to start using some HMS services such us [titanium-hms-push-kit](https://github.com/ikamaru/titanium-hms-push-kit) and [titanium-hms-map-kit](https://github.com/ikamaru/titanium-hms-map-kit)
 
 
 ## Content
@@ -27,7 +27,7 @@ keytool -list -v -keystore hms_test.jks
 ![key](https://user-images.githubusercontent.com/61454003/101916607-7a38b700-3bc7-11eb-8ddb-c7746432dea8.png)
 
 - On the AppGallery Connect (AGC) console of [HUAWEI Developer](https://developer.huawei.com/consumer/en/), Select your project or create a new one if you didn't do yet, then:
-    -    In to the tab **Project Setting** > **General information** and past the obtained SHA256 fingerprint, Click √ to save the fingerprint and download then the **agconnect-services.json** file.
+    -    In to the tab **Project Setting** > **General information** past the obtained SHA256 fingerprint, Click √ to save the fingerprint and download then the **agconnect-services.json** file.
 ![image](https://user-images.githubusercontent.com/61454003/101918101-3f378300-3bc9-11eb-9633-73beedb855b3.png)
 
 ### Titanium App side:
@@ -40,7 +40,7 @@ titanium create --type app --platforms android
 ```groovy
 apply plugin: 'com.huawei.agconnect'
 ```
-- Create a **plugins** folder in your Titanium project's root path, inside of this folder past the **com.ikamaru.ti.hms.env_preparation** folder that exists in this repo.
+- Create a **plugins** folder (same level as the **plarftom** folder) directly in your Titanium project's root folder , inside of this folder past the **com.ikamaru.ti.hms.env_preparation** folder that exists in this repo.
 - Inside **tiapp.xml** add the **com.ikamaru.ti.hms.env_preparation** plugin that we downloaded in the **plugins** folder:
 ```xml
 <plugins>
