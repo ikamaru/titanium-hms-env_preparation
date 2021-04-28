@@ -3,10 +3,14 @@ var fs = require('fs');
 var path = require("path");
 
 
-const TARGET = path.join("build", "android", "build.gradle");
+const ANDROID_DIR = path.join("build","android");
+const PROJECT_LEVEL_GRADLE = path.join(ANDROID_DIR,"build.gradle");
+const APP_LEVEL_GRADLE = path.join(ANDROID_DIR,"app","src","main", "build.gradle");
+
 const CLASSPATH="classpath 'com.huawei.agconnect:agcp:1.4.1.300'";
 const MAVEN_REPO="maven {url 'https://developer.huawei.com/repo/'}"
-const ANDROID_DIR = 'build/android';
+const HW_PLUGIN="apply plugin: 'com.huawei.agconnect'";
+
 const PLATFORM = {
     ANDROID: {
      	dest: [
@@ -28,23 +32,21 @@ function fileExists(path) {
 }
 
 /***Maven and classpath helper***/
-
-
-function rootBuildGradleExists() {
-  	return fs.existsSync(TARGET);
+function buildGradleExists(target) {
+  	return fs.existsSync(target);
 }
 /*
  * Helper function to read the build.gradle that sits at the root of the project
  */
-function readRootBuildGradle() {
-  	return fs.readFileSync(TARGET, "utf-8");
+function readBuildGradle(target) {
+  	return fs.readFileSync(target, "utf-8");
 }
 
 /*
  * Helper function to write to the build.gradle that sits at the root of the project
  */
-function writeRootBuildGradle(contents) {
-	fs.writeFileSync(TARGET, contents);
+function writeRootBuildGradle(target,contents) {
+	fs.writeFileSync(target, contents);
 }
 
 /*
@@ -106,14 +108,25 @@ function addRepos(buildGradle) {
 
   	return buildGradle;
 }
-
 function hmsDependeciesExists(buildGradle){
-	
     if(buildGradle.includes(CLASSPATH) )
         return true;
     return false;
-
 }
+/*
+ * Add apply plugin
+ */
+function addHwPlugin(buildGradle) {
+	buildGradle=buildGradle+"\n "+HW_PLUGIN;
+	return buildGradle;
+}
+function hwPluginExists(buildGradle){
+    if(buildGradle.includes(HW_PLUGIN) )
+        return true;
+    return false;
+}
+
+
 
 
 module.exports = {
@@ -147,11 +160,12 @@ module.exports = {
 	},
 	modifyRootBuildGradle:function() {
 	    // be defensive and don't crash if the file doesn't exist
-	    if (!rootBuildGradleExists) {
+	    if (!buildGradleExists(PROJECT_LEVEL_GRADLE)) {
+			console.log("[WARNING]	!rootBuildGradleExists");
 	      return;
 	    }
 
-	    var buildGradle = readRootBuildGradle();
+	    var buildGradle = readBuildGradle(PROJECT_LEVEL_GRADLE);
 	    //if HMS depencies already exists no need to add it 
 	    if(hmsDependeciesExists(buildGradle)) return;
 
@@ -161,6 +175,22 @@ module.exports = {
 	    // Add huawei's Maven Repo
 	    buildGradle = addRepos(buildGradle);
 
-	    writeRootBuildGradle(buildGradle);
-	  }
+	    writeRootBuildGradle(PROJECT_LEVEL_GRADLE,buildGradle);
+	},
+	modifyAppBuildGradle: async function() {
+		
+	    // be defensive and don't crash if the file doesn't exist
+	    if (!buildGradleExists(APP_LEVEL_GRADLE)) {
+			await fs.promises.writeFile(APP_LEVEL_GRADLE, '');
+	    }
+	    var AppBuildGradle = readBuildGradle(APP_LEVEL_GRADLE);
+	    //if huawei plugin already exists no need to add it 
+	    if(hwPluginExists(AppBuildGradle)){
+			return;
+		}
+	    // Add AG Services Dependency
+	    AppBuildGradle = addHwPlugin(AppBuildGradle);
+
+	    writeRootBuildGradle(APP_LEVEL_GRADLE,AppBuildGradle);
+	}
 };
