@@ -42,7 +42,7 @@ titanium create --type app --platforms android
 - Inside **tiapp.xml** add the **com.ikamaru.ti.hms.env_preparation** plugin that we downloaded in the **plugins** folder:
 ```xml
 <plugins>
-	<plugin version="2.0">com.ikamaru.ti.hms.env_preparation</plugin>
+	<plugin version="2.1">com.ikamaru.ti.hms.env_preparation</plugin>
 </plugins>
 ```
 
@@ -54,7 +54,7 @@ titanium create --type app --platforms android
 │       ├───agconnect-services.json
 └───plugins
     └───com.ikamaru.ti.hms.env_preparation
-        └───2.0
+        └───2.1
             ├───hooks
             │   └───myhook.js
             └───libs
